@@ -6,7 +6,16 @@
 </head>
 <body>
 	<div id="stl_cont" style="width:500px;height:500px;"></div>
-    <script>
+    <script type="module">
+import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
+
+const scad = await OpenSCAD();
+
+scad.FS.writeFile("/input.scad", `cube(10);`);
+scad.callMain(["/input.scad", "-o", "cube.stl"]);
+var output = scad.FS.readFile("/cube.stl");
+
+var out_file = new File(output, "cube.slt");
 
 var stl_viewer=new StlViewer
 (
@@ -14,7 +23,7 @@ var stl_viewer=new StlViewer
     {
         models:
         [
-            {filename:"clip/bottle-clip.stl"}
+            {local_file:out_file}
         ]
     }
 );
