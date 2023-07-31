@@ -15,22 +15,48 @@
 
 
         export async function bla() {
-            const scad = await OpenSCAD();
+            const scad = await OpenSCAD({noInitialRun: true});
 
             scad.FS.writeFile("/input.scad", `cube(10); cube([20, 5, 20]);`);
             scad.callMain(["/input.scad", "-o", "cube.stl"]);
             var output = scad.FS.readFile("/cube.stl");
 
-            window.out_file = new File(output, "cube.slt");
-            stl_viewer.add_model({local_file:out_file});
+            window.out_file = new File([output], {
+                type: "application/octet-stream"
+            });
+            stl_viewer.add_model({ local_file: out_file });
         }
+
+        export async function blub(file) {
+            stl_viewer.add_model({ local_file: file });
+            window.preload = file;
+        }
+
+        export function download(filename) {
+            // Create a new link
+            const anchor = document.createElement('a');
+            anchor.href = URL.createObjectURL(window.out_file);
+            anchor.download = filename;
+
+            // Append to the DOM
+            document.body.appendChild(anchor);
+
+            // Trigger `click` event
+            anchor.click();
+
+            // Remove element from DOM
+            document.body.removeChild(anchor);
+        };
 
         window.stl_viewer = stl_viewer;
         window.bla = bla;
+        window.blub = blub;
+        window.download = download;
 
     </script>
-    <input type="file" onchange='stl_viewer.add_model({local_file:this.files[0]});' accept="*.*">
-    <input type="button" onclick="bla();" text="Reinscheissen!!!">
+    <input type="file" onchange='blub(this.files[0]);' accept="*.*">
+    <button onclick="bla();">Reinscheissen!!!</button>
+    <button onclick="download('test.stl');">Download</button>
 </body>
 
 </html>
