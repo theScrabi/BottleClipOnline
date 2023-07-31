@@ -57,14 +57,14 @@ module bottle_clip(ru=13, rl=17.5, ht=26, width=2.5, name="", gap=90,
 			} else {
 				//writecylinder(name, [0,0,0], rl+0.5, ht/13*7, h=ht/13*4, t=max(rl,ru),
 				//	font=font);
-				/*
+				/*	
 				translate([0,0,ht*3/4-0.1])
 					rotate([90,0,0])
 					scale([ht/100,ht/100,1])
 					translate([-25,-25,0.5])
 					linear_extrude(height=max(ru,rl)*2)
 					import(logo);
-					*/
+				*/	
 			}
 		}
 		// inner cylinder which is substracted

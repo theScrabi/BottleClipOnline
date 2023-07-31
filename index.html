@@ -8,12 +8,16 @@
 
 <body style="height:100%;">
     <div id="stl_cont" style="width:100%;height:100%;"></div>
-    <button id="renderButton" onclick="render();" disabled>Render!!!</button>
-    <button id="downloadButton" onclick="download('slice_me.stl');" disabled>Download</button>
-
+    <div class="button-container" style="display: flex;">
+        <button id="renderButton" onclick="render();" disabled>Render!!!</button>
+        <button id="downloadButton" onclick="download('slice_me.stl');" disabled>Download</button>
+    </div>
 
     <script type="module">
         import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
+        import addFonts from "https://openscad.cloud/openscad/openscad.fonts.js";
+        import addMCAD from "https://openscad.cloud/openscad/openscad.mcad.js";
+
 
         const scad = await OpenSCAD({ noInitialRun: true });
 
@@ -69,7 +73,7 @@
 
 
         export async function render() {
-            scad.callMain(["bottle-clip.scad", "-o", "clip.stl"]);
+            scad.callMain(["bottle-clip.scad", "-o", "clip.stl", "--info"]);
             console.log("render done");
             const output = scad.FS.readFile("/clip.stl");
 
