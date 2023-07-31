@@ -7,27 +7,71 @@
 </head>
 
 <body>
-    <div id="stl_cont" style="width:500px;height:500px;"></div>
+    <div id="stl_cont" style="width:100%;height:100%;"></div>
     <script type="module">
         import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
 
+        const scad = await OpenSCAD({ noInitialRun: true });
+
         var stl_viewer = new StlViewer(document.getElementById("stl_cont"));
 
+        Promise.all([
+            fetch('/clip/test.scad'),
+            fetch('/clip/bottle-clip.scad'),
+            fetch('/clip/icons/pesthoernchen.dxf'),
+            fetch('/clip/write_lib/Write.scad'),
+            fetch('/clip/write_lib/orbitron.dxf'),
+            fetch('/clip/bottle-clip.scad')
+        ]).then(async (responses) => {
+            const files = [];
 
-        export async function bla() {
-            const scad = await OpenSCAD({noInitialRun: true});
+            responses.forEach(async (resp) => {
+                const url = new URL(resp.url);
+                //console.log(url.pathname);
+                //console.log(resp);
+                const reader = resp.body.getReader();
 
-            scad.FS.writeFile("/input.scad", `cube(10); cube([20, 5, 20]);`);
-            scad.callMain(["/input.scad", "-o", "cube.stl"]);
-            var output = scad.FS.readFile("/cube.stl");
+                try {
+                    let result = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+
+                        if (done) {
+                            break;
+                        }
+                        result += new TextDecoder().decode(value);
+                    }
+
+                    files.push({ name: url.pathname.replace(new RegExp("/clip", 'g'), ""), data: result });
+                } catch (error) {
+                    console.error("Error reading the stream:", error);
+                } finally {
+                    reader.releaseLock();
+                }
+            });
+            return files;
+        }).then(async (files) => {
+            scad.FS.mkdir('/icons');
+            scad.FS.mkdir('/write_lib');
+            console.log(files);
+            files.forEach(async (file) => {
+                scad.FS.writeFile(file.name, file.data);
+            });
+        });
+
+
+        export async function render() {
+            await scad.callMain(["test.scad", "-o", "clip.stl"]);
+            const output = scad.FS.readFile("/clip.stl");
 
             window.out_file = new File([output], {
                 type: "application/octet-stream"
             });
             stl_viewer.add_model({ local_file: out_file });
-        }
+        };
 
-        export async function blub(file) {
+        export async function upload(file) {
             stl_viewer.add_model({ local_file: file });
             window.preload = file;
         }
@@ -49,13 +93,13 @@
         };
 
         window.stl_viewer = stl_viewer;
-        window.bla = bla;
-        window.blub = blub;
+        window.upload = upload;
+        window.render = render;
         window.download = download;
 
     </script>
-    <input type="file" onchange='blub(this.files[0]);' accept="*.*">
-    <button onclick="bla();">Reinscheissen!!!</button>
+    <input type="file" onchange='upload(this.files[0]);' accept="*.*">
+    <button onclick="render();">Reinscheissen!!!</button>
     <button onclick="download('test.stl');">Download</button>
 </body>
 

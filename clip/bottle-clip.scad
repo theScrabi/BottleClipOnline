@@ -14,7 +14,7 @@ lower_radius=22.5;
 height=26;
 
 
-include <write_lib/Write.scad>
+//include <write_lib/Write.scad>
 
 /**
  * Creates one instance of a bottle clip name tag. The default values are
@@ -42,7 +42,7 @@ include <write_lib/Write.scad>
  * font: the path to a font for Write.scad.
  */
 module bottle_clip(ru=13, rl=17.5, ht=26, width=2.5, name="", gap=90,
-		logo="thing-logos/stratum0-lowres.dxf", font="write/orbitron.dxf") {
+		logo="thing-logos/stratum0-lowres.dxf", font="orbitron.dxf") {
     
 	e=100;  // should be big enough, used for the outer boundary of the text/logo
 
@@ -52,11 +52,11 @@ module bottle_clip(ru=13, rl=17.5, ht=26, width=2.5, name="", gap=90,
 			cylinder(r1=rl+width, r2=ru+width, h=ht);
 			// text and logo
 			if(logo == "") {
-				writecylinder(name, [0,0,3], rl+0.5, ht/13*7, h=ht/13*8, t=max(rl,ru),
-					font=font);
+				//writecylinder(name, [0,0,3], rl+0.5, ht/13*7, h=ht/13*8, t=max(rl,ru),
+				//	font=font);
 			} else {
-				writecylinder(name, [0,0,0], rl+0.5, ht/13*7, h=ht/13*4, t=max(rl,ru),
-					font=font);
+				//writecylinder(name, [0,0,0], rl+0.5, ht/13*7, h=ht/13*4, t=max(rl,ru),
+				//	font=font);
 				translate([0,0,ht*3/4-0.1])
 					rotate([90,0,0])
 					scale([ht/100,ht/100,1])
