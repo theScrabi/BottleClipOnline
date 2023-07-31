@@ -6,14 +6,20 @@
     <title>Bottleclip Online</title>
 </head>
 
-<body>
+<body style="height:100%;">
     <div id="stl_cont" style="width:100%;height:100%;"></div>
+    <button id="renderButton" onclick="render();" disabled>Render!!!</button>
+    <button id="downloadButton" onclick="download('slice_me.stl');" disabled>Download</button>
+
+
     <script type="module">
         import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
 
         const scad = await OpenSCAD({ noInitialRun: true });
 
-        var stl_viewer = new StlViewer(document.getElementById("stl_cont"));
+        const stl_viewer = new StlViewer(document.getElementById("stl_cont"));
+        const downloadButton = document.getElementById('downloadButton');
+        const renderButton = document.getElementById('renderButton');
 
         Promise.all([
             fetch('/clip/test.scad'),
@@ -58,16 +64,19 @@
             files.forEach(async (file) => {
                 scad.FS.writeFile(file.name, file.data);
             });
+            renderButton.disabled = false;
         });
 
 
         export async function render() {
-            await scad.callMain(["test.scad", "-o", "clip.stl"]);
+            scad.callMain(["bottle-clip.scad", "-o", "clip.stl"]);
+            console.log("render done");
             const output = scad.FS.readFile("/clip.stl");
 
             window.out_file = new File([output], {
                 type: "application/octet-stream"
             });
+            downloadButton.disabled = false;
             stl_viewer.add_model({ local_file: out_file });
         };
 
@@ -96,11 +105,9 @@
         window.upload = upload;
         window.render = render;
         window.download = download;
+        window.scad = scad;
 
     </script>
-    <input type="file" onchange='upload(this.files[0]);' accept="*.*">
-    <button onclick="render();">Reinscheissen!!!</button>
-    <button onclick="download('test.stl');">Download</button>
 </body>
 
 </html>
