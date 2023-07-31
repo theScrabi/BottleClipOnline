@@ -1,33 +1,36 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<script src="stl_viewer.min.js"></script>
-	<title>Bottleclip Online</title>
+
+<head>
+    <script src="stl_viewer.min.js"></script>
+    <title>Bottleclip Online</title>
 </head>
+
 <body>
-	<div id="stl_cont" style="width:500px;height:500px;"></div>
+    <div id="stl_cont" style="width:500px;height:500px;"></div>
     <script type="module">
-import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
+        import OpenSCAD from "https://openscad.cloud/openscad/openscad.js";
 
-const scad = await OpenSCAD();
+        var stl_viewer = new StlViewer(document.getElementById("stl_cont"));
 
-scad.FS.writeFile("/input.scad", `cube(10);`);
-scad.callMain(["/input.scad", "-o", "cube.stl"]);
-var output = scad.FS.readFile("/cube.stl");
 
-var out_file = new File(output, "cube.slt");
+        export async function bla() {
+            const scad = await OpenSCAD();
 
-var stl_viewer=new StlViewer
-(
-    document.getElementById("stl_cont"),
-    {
-        models:
-        [
-            {local_file:out_file}
-        ]
-    }
-);
+            scad.FS.writeFile("/input.scad", `cube(10); cube([20, 5, 20]);`);
+            scad.callMain(["/input.scad", "-o", "cube.stl"]);
+            var output = scad.FS.readFile("/cube.stl");
+
+            window.out_file = new File(output, "cube.slt");
+            stl_viewer.add_model({local_file:out_file});
+        }
+
+        window.stl_viewer = stl_viewer;
+        window.bla = bla;
 
     </script>
+    <input type="file" onchange='stl_viewer.add_model({local_file:this.files[0]});' accept="*.*">
+    <input type="button" onclick="bla();" text="Reinscheissen!!!">
 </body>
-</html> 
+
+</html>
