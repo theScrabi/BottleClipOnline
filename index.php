@@ -62,23 +62,42 @@
             background-color: #aaaaaa;
             cursor: not-allowed;
         }
+
+        #danceImg {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
-    <div id="stl_cont"></div>
+    <div id="stl_cont">
+        <!--<img src="hamsterdance.gif" id="danceImg"> -->
+    </div>
     <form method="POST">
         <input id="clipText" type="text" name="clipText" placeholder="Enter your Name">
-        <button onClick="alert('gurken')" id="renderButton" type="submit" name="renderButton">Render !!!</Button>
+        <button onClick="onRenderButtonClicked()" id="renderButton" type="submit" name="renderButton">Render !!!</Button>
     </form>
     <div class="button-container" style="display: flex;">
         <button id="downloadButton" onclick="download('slice_me.stl');" disabled>Download</button>
     </div>
 
     <script>
+        const stl_cont = document.getElementById("stl_cont");
+
         const stl_viewer = new StlViewer(document.getElementById("stl_cont"));
         const downloadButton = document.getElementById('downloadButton');
         const renderButton = document.getElementById('renderButton');
+
+        function onRenderButtonClicked() {
+            const imgTag = document.createElement("img");
+            imgTag.src = "hamsterdance.gif";
+            imgTag.id = "danceImg";
+            stl_cont.innerHTML = "";
+            stl_cont.appendChild(imgTag);
+        }
 
         function upload(file) {
             stl_viewer.add_model({ local_file: file });
