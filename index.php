@@ -4,17 +4,76 @@
 <head>
     <script src="stl_viewer.min.js"></script>
     <title>Bottleclip Online</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+       }
+
+        #stl_cont {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        form {
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="text"] {
+            width: 200px;
+        }
+
+        #downloadButton {
+            margin: 10px auto;
+        }
+
+        button:hover,
+        input[type="text"]:hover {
+            background-color: #aaaaaa;
+        }
+
+        button:disabled {
+            background-color: #aaaaaa;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 
-<body style="height:100%;">
-    <div id="stl_cont" style="width:100%;height:100%;"></div>
+<body>
+    <div id="stl_cont"></div>
     <form method="POST">
-        <input type="text" name="clipText" placeholder="Enter your Name">
-        <button type="submit" name="renderButton">Render !!!</Button>
+        <input id="clipText" type="text" name="clipText" placeholder="Enter your Name">
+        <button onClick="alert('gurken')" id="renderButton" type="submit" name="renderButton">Render !!!</Button>
     </form>
     <div class="button-container" style="display: flex;">
         <button id="downloadButton" onclick="download('slice_me.stl');" disabled>Download</button>
-</div>
+    </div>
 
     <script>
         const stl_viewer = new StlViewer(document.getElementById("stl_cont"));
