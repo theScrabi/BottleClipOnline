@@ -1,4 +1,4 @@
-name = "ymk";
+name = "Peter";
 bottle_type = "din-6075"; // [din-6075:"DIN 6075 (Club Mate, most beers)", din-6198:"DIN 6198 (Euro2)", din-6199:"DIN 6199 (Steinie)", longneck:"Longneck (Fritz Cola)", custom:Custom]
 logo = "icons/pesthoernchen.dxf";
 name_font = "write_lib/orbitron.dxf";
@@ -14,7 +14,7 @@ lower_radius=22.5;
 height=26;
 
 
-//include <write_lib/Write.scad>
+include <write_lib/Write.scad>
 
 /**
  * Creates one instance of a bottle clip name tag. The default values are
@@ -52,19 +52,19 @@ module bottle_clip(ru=13, rl=17.5, ht=26, width=2.5, name="", gap=90,
 			cylinder(r1=rl+width, r2=ru+width, h=ht);
 			// text and logo
 			if(logo == "") {
-				//writecylinder(name, [0,0,3], rl+0.5, ht/13*7, h=ht/13*8, t=max(rl,ru),
-				//	font=font);
+				writecylinder(name, [0,0,3], rl+0.5, ht/13*7, h=ht/13*8, t=max(rl,ru),
+					font=font);
 			} else {
-				//writecylinder(name, [0,0,0], rl+0.5, ht/13*7, h=ht/13*4, t=max(rl,ru),
-				//	font=font);
-				/*	
+				writecylinder(name, [0,0,0], rl+0.5, ht/13*7, h=ht/13*4, t=max(rl,ru),
+					font=font);
+					
 				translate([0,0,ht*3/4-0.1])
 					rotate([90,0,0])
 					scale([ht/100,ht/100,1])
 					translate([-25,-25,0.5])
 					linear_extrude(height=max(ru,rl)*2)
 					import(logo);
-				*/	
+					
 			}
 		}
 		// inner cylinder which is substracted
