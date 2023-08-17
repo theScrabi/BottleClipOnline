@@ -54,7 +54,9 @@
                 type: "application/octet-stream"
             });
             downloadButton.disabled = false;
-            stl_viewer.add_model({ local_file: out_file });
+            stl_viewer.add_model({ local_file: out_file, rotationz:0.7854, rotationx: -1.571, color:"#ffa500", animation:{delta:{rotationz:0.1, msec:1000, loop:true}} });
+
+
         };
 
         window.stl_viewer = stl_viewer;
@@ -69,11 +71,10 @@
 
             $safeClipText = escapeshellarg($clipText);
 
-            //$command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
-            //$stl = shell_exec($command);
+            $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
+            $stl = shell_exec($command);
 
-            echo "<h2> Output: </h2>"; 
-            echo "<script>display(" . json_encode($safeClipText) . ")</script>";
+            echo "<script>displayStl(" . json_encode($stl) . ")</script>";
         }
     ?>
 </body>
