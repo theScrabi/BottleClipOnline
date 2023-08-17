@@ -17,6 +17,10 @@
             flex: 1;
             overflow: hidden;
             position: relative;
+            flex-direction: column;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
         }
 
         form {
@@ -66,9 +70,10 @@
         #danceImg {
             max-width: 100%;
             max-height: 100%;
-            display: block;
+            display: flex;
             margin: auto;
         }
+        
     </style>
 </head>
 
@@ -97,6 +102,10 @@
             imgTag.id = "danceImg";
             stl_cont.innerHTML = "";
             stl_cont.appendChild(imgTag);
+        }
+
+        function invalidInput() {
+            stl_cont.innerHTML = "<h1>Only letters, digits, -, #, !, ., and ? are allowed.</h1>";
         }
 
         function upload(file) {
@@ -147,12 +156,15 @@
         if(isset($_POST['renderButton'])) {
             $clipText = $_POST['clipText'];
 
-            $safeClipText = escapeshellarg($clipText);
+            if(preg_match('/^[a-zA-Y0-9\-#!.\?]*$/', $clipText)) {
+                $safeClipText = escapeshellarg($clipText);
+                $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
+                $stl = shell_exec($command);
 
-            $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
-            $stl = shell_exec($command);
-
-            echo "<script>displayStl(" . json_encode($stl) . ")</script>";
+                echo "<script>displayStl(" . json_encode($stl) . ")</script>";
+            } else {
+                echo "<script>invalidInput();</script>";
+            }
         }
     ?>
 </body>
