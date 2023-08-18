@@ -104,8 +104,8 @@
             stl_cont.appendChild(imgTag);
         }
 
-        function invalidInput() {
-            stl_cont.innerHTML = "<h1>Only letters, digits, -, #, !, ., and ? are allowed.</h1>";
+        function invalidInput(message) {
+            stl_cont.innerHTML = "<h1>" + message + "</h1>";
         }
 
         function upload(file) {
@@ -155,15 +155,18 @@
     <?php
         if(isset($_POST['renderButton'])) {
             $clipText = $_POST['clipText'];
+            if(mb_strlen($clipText, 'UTF-8') <= 16) {
+                if(preg_match('/^[a-zA-Y0-9\-#!.\?]*$/', $clipText)) {
+                    $safeClipText = escapeshellarg($clipText);
+                    $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
+                    $stl = shell_exec($command);
 
-            if(preg_match('/^[a-zA-Y0-9\-#!.\?]*$/', $clipText)) {
-                $safeClipText = escapeshellarg($clipText);
-                $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
-                $stl = shell_exec($command);
-
-                echo "<script>displayStl(" . json_encode($stl) . ")</script>";
+                    echo "<script>displayStl(" . json_encode($stl) . ");</script>";
+                } else {
+                    echo "<script>invalidInput(".json_encode("Only letters, digits, -, #, !, ., and ? are allowed.)") .");</script>";
+                }
             } else {
-                echo "<script>invalidInput();</script>";
+                echo "<script>invalidInput(".json_encode("Your name may only be 16 characters long.") .");</script>";
             }
         }
     ?>
