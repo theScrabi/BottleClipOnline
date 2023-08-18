@@ -11,7 +11,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY ./config/nginx.conf /etc/nginx/sites-enabled/default
 
 # Copy your OpenSCAD files into the container (adjust the path accordingly)
-COPY --chown=www-data:www-data ./test /app/
+COPY --chown=www-data:www-data ./bottleclip_web /app/
 
 # Expose port 80 for Apache
 EXPOSE 80
