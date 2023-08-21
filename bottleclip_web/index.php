@@ -40,32 +40,32 @@
         }
 
         input[type="text"] {
-            margin: 5px;
-            padding: 10px 20px;
+            margin: 0.5rem;
+            padding: 1rem 2rem;
             background-color: white;
             color: black;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 0.5rem;
             transition: background-color 0.3s ease;
         }
 
         button {
-            margin: 5px;
-            padding: 10px 20px;
+            margin: 0.5rem;
+            padding: 1rem 1rem;
             background-color: #4caf50;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 0.5rem;
             transition: background-color 0.3s ease;
         }
 
         input[type="text"] {
-            width: 200px;
+            width: 10rem;
         }
 
         #downloadButton {
-            margin: 10px auto;
+            margin: 0.5rem auto;
         }
 
         button:hover,
@@ -89,14 +89,19 @@
             position: absolute;
             top: 0;
             right: 0;
-        }	   
+        }
+        
+        #bannerImg {
+            width: 10rem;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
     <div id='topScreenContent'>
         <a id='forkMeBanner' href="https://github.com/theScrabi/BottleClipOnline">
-            <img decoding="async" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" loading="lazy" data-recalc-dims="1">
+            <img id='bannerImg' decoding="async" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" loading="lazy" data-recalc-dims="1">
         </a>
         <div id="stl_cont">
             <!--<img src="hamsterdance.gif" id="danceImg"> -->
