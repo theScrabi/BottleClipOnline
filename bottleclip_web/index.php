@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="stl_viewer.min.js"></script>
     <title>Bottleclip Online</title>
     <style>
@@ -171,6 +172,14 @@
 
 
         };
+
+        function adjustBodyHeight() {
+            const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            document.body.style.height = viewportHeight + 'px';
+        }
+
+        adjustBodyHeight();
+        window.addEventListener('resize', adjustBodyHeight);
 
         window.stl_viewer = stl_viewer;
         window.upload = upload;
