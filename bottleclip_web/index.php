@@ -93,7 +93,7 @@
         }
         
         #bannerImg {
-            width: 10rem;
+            width: 149px;
             height: auto;
         }
     </style>
