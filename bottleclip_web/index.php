@@ -13,12 +13,23 @@
             height: 100vh;
        }
 
-        #stl_cont {
+       #topScreenContent {
             flex: 1;
             overflow: hidden;
             position: relative;
             flex-direction: column;
             height: 100vh;
+            align-items: center;
+            justify-content: center;
+       }
+      
+        #stl_cont {
+            bottom: 0;
+            top: 0;
+            right: 0;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
             align-items: center;
             justify-content: center;
         }
@@ -73,16 +84,23 @@
             display: flex;
             margin: auto;
         }
-        
+
+        #forkMebanner {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }	   
     </style>
 </head>
 
 <body>
-    <a href="https://github.com/theScrabi/BottleClipOnline">
-        <img decoding="async" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" loading="lazy" data-recalc-dims="1">
-    </a>
-    <div id="stl_cont">
-        <!--<img src="hamsterdance.gif" id="danceImg"> -->
+    <div id='topScreenContent'>
+        <a id='forkMeBanner' href="https://github.com/theScrabi/BottleClipOnline">
+            <img decoding="async" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" loading="lazy" data-recalc-dims="1">
+        </a>
+        <div id="stl_cont">
+            <!--<img src="hamsterdance.gif" id="danceImg"> -->
+        </div>
     </div>
     <form method="POST">
         <input id="clipText" type="text" name="clipText" placeholder="Enter your Name">
