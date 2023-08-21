@@ -108,7 +108,7 @@
             <!--<img src="hamsterdance.gif" id="danceImg"> -->
         </div>
     </div>
-    <form method="POST">
+    <form id="reqForm" method="POST">
         <input id="clipText" type="text" name="clipText" placeholder="Enter your Name">
         <button onClick="onRenderButtonClicked()" id="renderButton" type="submit" name="renderButton">Render !!!</Button>
     </form>
@@ -121,7 +121,14 @@
 
         const stl_viewer = new StlViewer(document.getElementById("stl_cont"));
         const downloadButton = document.getElementById('downloadButton');
+        const clipTextInput = document.getElementById('clipText');
         const renderButton = document.getElementById('renderButton');
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has('text')) {
+            clipTextInput.value = urlParams.get('text');
+        }
 
         function onRenderButtonClicked() {
             const imgTag = document.createElement("img");
@@ -181,6 +188,12 @@
         adjustBodyHeight();
         window.addEventListener('resize', adjustBodyHeight);
 
+        document.getElementById('reqForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            window.location.search = `?text=${clipTextInput.value}`;
+        });
+
         window.stl_viewer = stl_viewer;
         window.upload = upload;
         window.download = download;
@@ -188,10 +201,10 @@
     </script>
 
     <?php
-        if(isset($_POST['renderButton'])) {
-            $clipText = $_POST['clipText'];
+        if(isset($_GET['text'])) {
+            $clipText = $_GET['text'];
             if(mb_strlen($clipText, 'UTF-8') <= 16) {
-                if(preg_match('/^[a-zA-Y0-9\-#!.\?]*$/', $clipText)) {
+                if(preg_match('/^[a-zA-Y0-9\-#!.üäöÜÄÖß\?]*$/', $clipText)) {
                     $safeClipText = escapeshellarg($clipText);
                     $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
                     $stl = shell_exec($command);
