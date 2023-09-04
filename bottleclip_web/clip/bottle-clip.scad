@@ -1,6 +1,6 @@
-name = "Peter";
+name = "I";
 bottle_type = "din-6075"; // [din-6075:"DIN 6075 (Club Mate, most beers)", din-6198:"DIN 6198 (Euro2)", din-6199:"DIN 6199 (Steinie)", longneck:"Longneck (Fritz Cola)", custom:Custom]
-logo = "icons/glider.dxf";
+logo = "icons/zam.dxf";
 name_font = "write_lib/orbitron.dxf";
 // thickness of the clip
 width=2;
