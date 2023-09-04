@@ -1,1 +1,5 @@
-docker run -d -p 8080:80 --name "bottleclip_online" bottle_clip_online 
+docker run -d \
+	--restart always \
+	-p 8082:80 \
+	--name "bottleclip_online" \
+	bottle_clip_online 
