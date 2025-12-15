@@ -1,0 +1,10 @@
+
+services:
+  bottle_clips_online:
+    container_name: bottle_clips_online
+    build:
+      context: BottleClipOnline
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8080:80
