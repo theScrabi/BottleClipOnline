@@ -140,7 +140,9 @@
         }
 
         function invalidInput(message) {
-            stl_cont.innerHTML = "<h1>" + message + "</h1>";
+            const heading = document.createElement("h1");
+            heading.textContent = message;
+            stl_cont.replaceChildren(heading);
         }
 
         function upload(file) {
@@ -163,10 +165,6 @@
             // Remove element from DOM
             document.body.removeChild(anchor);
         };
-
-        function display(stl) {
-            document.write("<pre>" + stl + "</pre>");
-        }
 
         function displayStl(stl) {
             console.log("render done");
@@ -192,7 +190,7 @@
         document.getElementById('reqForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(this);
-            window.location.search = `?text=${clipTextInput.value}`;
+            window.location.search = `?text=${encodeURIComponent(clipTextInput.value)}`;
         });
 
         window.stl_viewer = stl_viewer;
@@ -202,17 +200,46 @@
     </script>
 
     <?php
+        // Renders the clip with OpenSCAD and caches the result per name.
+        // Uses an argv array so no shell is involved, and `timeout` so a
+        // render can't block a php-fpm worker forever.
+        function renderClip($clipText) {
+            $cacheDir = sys_get_temp_dir() . '/bottleclip-cache';
+            $cacheFile = $cacheDir . '/' . hash('sha256', $clipText) . '.stl';
+            if(is_file($cacheFile)) {
+                return file_get_contents($cacheFile);
+            }
+
+            $cmd = ['timeout', '30', 'openscad', '-Dname="' . $clipText . '"',
+                    '--export-format', 'stl', '-o', '-', 'clip/bottle-clip.scad'];
+            $proc = proc_open($cmd, [1 => ['pipe', 'w'], 2 => ['file', '/dev/null', 'w']], $pipes, __DIR__);
+            if(!is_resource($proc)) {
+                return null;
+            }
+            $stl = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            if(proc_close($proc) !== 0 || $stl === '') {
+                return null;
+            }
+
+            if(is_dir($cacheDir) || @mkdir($cacheDir, 0700)) {
+                file_put_contents($cacheFile, $stl, LOCK_EX);
+            }
+            return $stl;
+        }
+
         if(isset($_GET['text'])) {
             $clipText = $_GET['text'];
             if(mb_strlen($clipText, 'UTF-8') <= 16) {
-                if(preg_match('/^[a-zA-Y0-9\-#!.üäöÜÄÖß\?]*$/', $clipText)) {
-                    $safeClipText = escapeshellarg($clipText);
-                    $command = "openscad -D'name=\"$safeClipText\"' --export-format stl -o - clip/bottle-clip.scad";
-                    $stl = shell_exec($command);
-
-                    echo "<script>displayStl(" . json_encode($stl) . ");</script>";
+                if(preg_match('/^[a-zA-Z0-9\-#!.?üäöÜÄÖß]*$/u', $clipText)) {
+                    $stl = renderClip($clipText);
+                    if($stl !== null) {
+                        echo "<script>displayStl(" . json_encode($stl) . ");</script>";
+                    } else {
+                        echo "<script>invalidInput(".json_encode("Rendering failed, please try again later.") .");</script>";
+                    }
                 } else {
-                    echo "<script>invalidInput(".json_encode("Only letters, digits, -, #, !, ., and ? are allowed.)") .");</script>";
+                    echo "<script>invalidInput(".json_encode("Only letters, digits, -, #, !, ., and ? are allowed.") .");</script>";
                 }
             } else {
                 echo "<script>invalidInput(".json_encode("Your name may only be 16 characters long.") .");</script>";
